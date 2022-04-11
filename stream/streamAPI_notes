@@ -1,0 +1,1359 @@
+- By Akash Prajapati
+
+
+
+# stream API (JAVA 8)
+- functional programming
+- to reduce mutation in java
+
+Interface issue(public abstract)
+- we can just declare, can't define Abstract feature
+ Solution:- we can declare as well as define methods in abstract class...(Default Methods)
+
+# stream API[stream()]
+List interface in collection/stream (x(+y methods))
+- WE CAN DEFINE METHOD NOW IN INTERFACE
+interface List{
+	add();
+	name();
+	void stream(){
+		//definition
+	}
+}
+example:
+interface I{
+	void add(); //public abstract
+	default void show(){	//must require jdk 1.8
+		//bcz of default now i can define
+	}
+}
+
+# diamond problem
+A show()	B show()
+	
+	C extends A,B
+		c.show(); //issue
+IN JAVA WE CAN IMPLEMENT 2 INTERFACES
+
+problem: if not defined in A or B then we have to define it in C.
+if defined in A or B using DEFAULT then it's OK.
+
+
+interface I{
+	default void show(){
+		S.o.p("I");
+	}
+}
+interface J{
+	default void show(){
+		S.o.p("J");
+	}
+}
+class A{
+	public void show(){
+		S.o.p("A");
+	}
+}
+class C extends A, implements I,J{
+	p s v m(S []args){
+		C obj = new C();
+		obj.show();	//Which show() will execute?
+	}
+}
+OUTPUT:
+A
+
+#Explaination:
+bcz in JAVA normal mathod has more priority as compare to interface's default method. #ThirdRule_in_JAVA
+
+
+#Do_Remember
+interface I{
+	default void equals(Object o){	//Error bcz this is already present in Object class
+		return true;
+	}
+}
+
+
+
+==========================================
+
+
+# static method (only work in java 1.8 not work in 1.7)
+interface I{
+	static void show(){ //allowed
+		S.o.p.("hi");
+	}
+}
+
+Stream API helps you to calculate data OR helps to preocess your data.
+bcz of JAVA 8 new concept introduced FUNCTIONAL PROGRAMMING.
+Functional programming says you NOT to focus on HOW to things just focus on WHAT to do.
+
+try this program...
+# EXTERNAL ITERATIONS
+
+import java.uti.List;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		/*  //using for loop
+		for(int i=0; i<6; i++){
+			S.o.p(values.get(i));
+		}
+		*/
+		/*	//using Iterartor
+		Iterator<Integer> i = values.iterator();
+		while(i.hasNext()){
+			S.o.p(i.next());
+		}
+		*/	//Enhanced for loop
+		//if we want all the values then enhanced for loop is best choice...
+		for(int i : values){
+			S.o.p(i);
+		}
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+//EXTERNAL ITERATION : In Ext. Itr. some problem outside of your object it will try to fetch the data from the object.
+
+//what if your collection you will be having a method using which we can increment. So that's called as INTERNAL ITERATION.
+
+we can achieve internal iteration with the help of stream API.
+
+# INTERNAL ITERATION (forEach() introduced in JAVA 1.8)
+
+Syntax of forEach(): 
+obj.forEach(lambda_expression);
+
+#program
+
+import java.util.Arrays;
+import java.util.List;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		values.forEach(i -> S.o.p(i));
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+//forEach() also accepts Consumer object
+
+what's Consumer?
+it's class & interface which helps in iterations.
+Consumer class/interface has predefined following method:
+public void accept(T t){ //T is used for iteration purpose. (so, we'll use (Integer i) in place of (T t))
+	//stmt
+}
+#Syntax_Consumer:
+Consumer<Integer> obj_consumer = new Consumer<Integer>(){
+	public void accept(Integer i){
+		S.o.p(i);
+	}	
+};
+obj_of_collection.forEach(obj_consumer);
+
+#program
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		Consumer<Integer> obj_consumer = new Consumer<Integer>(){
+			public void accept(Integer i){
+				S.o.p(i);
+			}	
+		};
+		values.forEach(obj_consumer);
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+
+//We can also implement interface Consumer like following...
+class A implements Consumer
+
+let's make the above program code more efficient...
+
+#program_efficient
+
+import java.util.Arrays;
+import java.uti.List;
+import java.util.function.Consumer;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		Consumer<Integer> obj_consumer = i -> S.o.p(i);
+		values.forEach(obj_consumer);
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+//before 1.8 we had 3 types of interfaces 
+1) normal interface
+2) interface with multiple methods
+3) marker interface (which is inerface without any methods)
+
+now in 1.8 we have one more type...
+4) SAM interface (interface with only Single Abstract Method)
+& this SAM interfaces called as FUNCTIONAL INTERFACE.
+
+example program of SAM interface:
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		values.forEach(new Consumer<Integer i>(){
+			public void accept(Integer i){
+				S.o.p(i);
+			}
+		});
+		
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+#Efficient_Code(the very first INTERNAL ITERATION code) :
+
+import java.util.Arrays;
+import java.util.List;
+
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		values.forEach(i -> S.o.p(i));
+		
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+
+summery of everything in two programs:
+#program(problem we were facing before java 1.8)
+||==============================================================||
+||# program1							||
+||package Java8DefaultMethod;					||
+||interface Actor{						||
+||	void act();						||
+||	void speak();						||
+||}								||
+||==============================================================||
+||# program2							||
+||package Java8DefaultMethod;					||
+||public class Hero implements Actor{				||
+||	public void act(){					||
+||		System.out.println("I can Act");		||
+||	}							||
+||	public void speak(){					||
+||		System.out.println("I can Speak");		||
+||	}							||	
+||	public void comedy(){					||
+||		System.out.println("I can make people laugh"); 	||
+||	}							||			
+||	public static void main(String[] args) {		||				
+||		Hero h = new Hero();				||		
+||		h.act();					||			
+||		h.speak();					||					
+||		h.comedy();					||	
+||	}							||				
+||}								||				
+||==============================================================||						
+||# program3							||					
+||package Java8DefaultMethod;					||						
+||public class Villain implements Actor{			||						
+||	public void act(){					||		
+||		System.out.println("I can Act");		||						
+||	}							||
+||	public void speak(){					||		
+||		System.out.println("I can Speak");		||		
+||	}							||			
+||	public void rude(){					||					
+||		System.out.println("I am rude");		||					
+||	}							||					
+||								||						
+||	public static void main(String[] args) {		||		
+||		Villain v = new Villain();			||					
+||		v.act();					||						
+||		v.speak();					||					
+||		v.rude();					||			
+||	}							||				
+||}								||					
+||==============================================================||
+
+# PROBLEM :
+// Everything was going correct but suddenly someone decided that everyone should know comedy also. 
+// so, after implemetation(inheritance) he declares a method[public void comedy();] in interface.
+// so, what will happen? => Hero class works properly but Villain will throw an error.
+
+# SOLUTION :
+// Solution is default methods in java 1.8 yeahhhh
+// I can define body part of new method[default void comedy(){ //stmt }] in interface.
+
+// that modification will be following...
+||==============================================================================||
+||# program1									||
+||package Java8DefaultMethod;							||
+||interface Actor{								||
+||	void act();								||
+||	void speak();								||
+||	default void comedy(){	// java 1.8 support this 			||
+||		System.out.println("Now i can also make people laugh...");	||
+||	}									||
+||}										||
+||==============================================================================||
+||# program2									||
+||package Java8DefaultMethod;							||
+||public class Hero implements Actor{						||
+||	public void act(){							||
+||		System.out.println("I can Act");				||
+||	}									||
+||	public void speak(){							||
+||		System.out.println("I can Speak");				||
+||	}									||	
+||	public void comedy(){							||
+||		System.out.println("I can make people laugh");			||
+||	}									||			
+||	public static void main(String[] args) {				||				
+||		Hero h = new Hero();						||		
+||		h.act();							||			
+||		h.speak();							||					
+||		h.comedy();	//prints: I can make people laugh		||
+||		// it won't print "Now i can also make people laugh..."		||
+||		// bcz normal methods has higher priority than default methods 	||	
+||	}									||				
+||}										||				
+||==============================================================================||					
+||# program3									||					
+||package Java8DefaultMethod;							||					
+||public class Villain implements Actor{					||
+||	public void act(){							||		
+||		System.out.println("I can Act");				||
+||	}									||
+||	public void speak(){							||		
+||		System.out.println("I can Speak");				||		
+||	}									||			
+||	public void rude(){							||					
+||		System.out.println("I am rude");				||					
+||	}									||					
+||										||
+||	public static void main(String[] args) {				||		
+||		Villain v = new Villain();					||					
+||		v.act();							||
+||		v.speak();							||					
+||		v.rude();							||
+||		v.comedy();	// prints: Now i can also make people laugh...	|| 			
+||	}									||				
+||}										||					
+||==============================================================================||
+
+
+# java 8 has something mysterious in forEach()
+
+// we heard PASS BY VALUE, PASS BY REFERENCE
+// here something new which is "PASS BY METHOD REFERENCE"
+
+# what's this pass by METHOD REFERENCE?
+=>
+	- like in INTERNAL ITERATIONS code, we see that there's an integer variable i. so, everytime when i will incremented by 1, simultaneously println()[S.o.p();] function printed.
+	- but, what if we can remove this extra integer variable i ?
+	- it can be done using pass by METHOD REFERENCE. which is shown below:
+NOTE: double colon(::) is used for METHOD REFERENCE
+
+import java.util.Arrays;
+import java.util.List;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		values.forEach(System.out::println); // this :: is used for pass by METHOD REFERENCE
+		// no lambda expression needed
+		// also now we don't require variable i
+	}
+}
+O/P:
+1
+2
+3
+4
+5
+6
+
+// it will work like .length() method. i mean it'll print upto lenght of an array.
+
+
+# problem:
+	- what if we need the double value of an array?
+
+# solution:
+import java.util.Arrays;
+import java.util.List;
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		values.forEach(i -> doubler(i)); //lambda expression
+	}
+	public static void doubler(int i){
+		S.o.p(i*2);
+	} 
+}
+O/P:
+2
+4
+6
+8
+10
+12
+
+// another way to print... #use_of_METHOD_REFERENCE
+
+package java8;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class Java8Demo{
+	p s v m(S []a){
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		
+		values.forEach(java8Demo::doubler);
+	}
+
+	public static void doubler(int i){
+		S.o.p(i*2);
+	} 
+}
+O/P:
+2
+4
+6
+8
+10
+12
+
+
+
+
+
+
+==================================================================================================
+
+
+// After learning this much stuff now you are ready to learn stream...
+// let's jump into the stream...
+
+// stream works same as forEach() just add stream() OR parallelStream()
+
+# example1
+List<Integer> values = new ArrayList<>();
+for(int i=1; i<=100; i++){
+	values.add(i);
+}
+values.stream().forEach(System.out::println);
+// same like, values.forEach(System.out::println);
+
+# example2
+List<Integer> values = new ArrayList<>();
+for(int i=1; i<=100; i++){
+	values.add(i);
+}
+values.parallelStream().forEach(System.out::println);
+
+# what's the concept of parallelStream() ?
+=>
+	- first of all you should know about basics of multi-threading...
+	- let suppose you are printing thousands of items. & parallelly you are working on something else. as we have multi-core CPUs(Dual core, Quad core, Octa core etc...)
+	- so, we can use them also by creating multi threads for it. but as a developer/programmer, we have to create those multiple threads for efficient use of CPU & utility.
+	- so, this parallelStream() method automatically creates multiple threads & utilize the CPU burst time.
+
+# my first stream program
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+class stream_filter{
+	public static void main(String[] args) {
+		List<Integer> values = new ArrayList<>();
+		for(int i=1; i<=100; i++){
+			values.add(i);
+		}
+		values.stream().filter(i -> {
+			System.out.println("hi"); //this is just for log
+			return true;
+		});
+	}
+}
+O/P:
+
+// you are thinking it'll print 100 times hi right?
+// but it won't print anything because, it's intermediate mathod. stream is a #lazy_approach OR #lazy_evaluation just like me.
+// to print we have to add S.o.p and .findFirst() as well like following:
+
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+class stream_filter{
+	public static void main(String[] args) {
+		List<Integer> values = new ArrayList<>();
+		for(int i=1; i<=10; i++){
+			values.add(i);
+		}
+		System.out.println(values.stream().filter(i -> {
+			System.out.println("hi");
+			return true;
+		}).findFirst());
+	}
+}
+O/P:
+hi
+Optional[1]
+
+// Optional[1] provides the very first element using findFirst()
+// wait let me show you in next example
+
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+class stream_filter{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(4,1,3,6,5,6);
+		
+		System.out.println(values.stream().filter(i -> {
+			System.out.println(values);
+			return true;
+		}).findFirst()/*.orElse(0)*/);
+	}
+}
+O/P:
+[4, 1, 3, 6, 5, 6]
+Optional[4]
+
+// see here very first element shown in the Optional parameter...
+// orElse(): returns the value if present, otherwise returns other... we'll see further later...
+
+
+# Why stream?
+// right question, 3 time claps for this...
+// if we can work without stream then why should we use stream concept? 
+// in this information age; BigData, hadoop require stream... but how??
+// bcz stream has some special functions/methods like...
+
+| INTERMEDIATE |  TERMINATE   |
+|==============|==============|
+|   filter();  | findFirst(); |	
+|    map();    |  forEach();  |
+
+// this methods helps us like if i want only odd numbers then it'll provide me only odd numbers from an ArrayList using filter(); method.
+// suppose you have an List of 10 & you have to multiply each value with some number then we can use map(); method. OR
+// if we want all Double value in Integer value, map(); is used here also.	
+
+
+//stream is used to print only once if you print it again it'll throw an exception...
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.*;
+class same_stream{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(1,2,23,3,4,5,6);
+
+		Stream<Integer> s = values.stream(); // it'll convert the List(values) into stream
+		s.forEach(System.out::println); // will work
+		s.forEach(System.out::println); // exception
+	}
+}
+
+Output:
+1
+2
+23
+3
+4
+5
+6
+Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
+        at java.util.stream.AbstractPipeline.sourceStageSpliterator(Unknown Source)
+        at java.util.stream.ReferencePipeline$Head.forEach(Unknown Source)
+        at same_stream.main(same_stream.java:10)
+
+
+# Normal Life
+example 1
+import java.util.Arrays;
+import java.uti.List;
+
+public class Demo{
+	p s v m(S []a){
+
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		int result = 0;
+		for(int i : values){
+			result = result + i; // #mutation what's happening here, values of result continuously changed 7 times(from 0 to 21)
+		}
+		S.o.p(result);
+	}
+}
+O/P:
+21
+
+example 2
+public class Demo{
+	p s v m(S []a){
+
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		int result = 0;
+		for(int i : values){
+			result = result + i*2; // another mutation i*2
+		}
+		S.o.p(result);
+	}
+}
+O/P:
+42
+
+
+
+
+# Thug life (Mentos zindagi) - WITHOUT MUTATION
+example 1
+
+import java.util.Arrays;
+import java.util.List;
+
+class list_to_stream{
+	public static void main(String[] args) {
+
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+
+		System.out.println(values.stream().reduce(0,(c,e) -> c+e));
+
+	}
+}
+O/P:
+21
+
+example 2
+
+import java.util.Arrays;
+import java.util.List;
+class list_to_stream_with_map{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(1,2,3,4,5,6);
+		System.out.println(values.stream().map(i -> i*2).reduce(0, (c, e) -> c+e)); //map is used to do some operation with stream...
+		//like here we doubled the List value & summation it...
+	}
+}
+O/P:
+42
+
+
+I know we didn't get anything so let me explain this manually...
+===============================================================================================================================================
+||STEP 1:
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||
+||class StreamMapExplain{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		Stream s = values.stream();		// but we don't want to create object
+||
+||		System.out.println(s);
+||	}
+||}
+||*/
+||
+||STEP 2:
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||
+||class StreamMapExplain{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		Stream s = values.stream();		
+||		s.map(null);		// but for this we have to implement Function
+||
+||		System.out.println(s);
+||	}
+||}
+||*/
+||
+||STEP 3:
+||/*
+||it's a Functional Interface (so there will be only one abstract method)
+||
+||Syntax of Function:
+||@FunctionalInterface
+||Function<T, R> obj = new Function<T, R>(){
+||	// R apply(T t);
+||}; 
+||where T=DataType and R=ReturnType
+||*/
+||
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||import java.util.function.Function;		// this import required
+||
+||class StreamMapExplain{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		Function<Integer, Integer> f = new Function<Integer, Integer>(){
+||			public Integer apply(Integer i){
+||				return i*2;
+||			}
+||		};
+||		Stream s = values.stream();		
+||		Stream s1 = s.map(f);		
+||		Stream s2 = s1.reduce(null);	// reduce will take 2 parameter initial and object of binary operator
+||
+||		// System.out.println(s);
+||		System.out.println(values.stream());
+||	}
+||}
+||*/
+||
+||STEP 4:
+||/*
+||it's a @FunctionalInterface
+||Syntax of BinaryOperator:
+||public interface BinaryOperator<T> extends BiFunction<T, T, T> {
+||
+||}
+||No methods in  BinaryOperator
+||
+||what's BiFunction?
+||it's @FunctionalInterface
+||public interface BiFunction<T, U, R> {
+||	// R apply(T t, U u);
+||}
+||*/
+||
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||import java.util.function.Function;
+||import java.util.function.BinaryOperator;	// this import required  // came in java 1.8
+||
+||class StreamMapExplain{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		Function<Integer, Integer> f = new Function<Integer, Integer>(){
+||			public Integer apply(Integer i){
+||				return i*2;		// 2 4 6 8 10 12
+||			}
+||		};
+||
+||		BinaryOperator<Integer> b = new BinaryOperator<Integer>(){
+||			public Integer apply(Integer i, Integer j){
+||				return i+j;
+||			}
+||		};
+||
+||		Stream s = values.stream();		
+||		Stream s1 = s.map(f);		
+||								// 2 4 6 8 10 12
+||		Integer result = (Integer)s1.reduce(0, b);	
+||/*
+||		how it works?
+||		0 is initial value.
+||		so, 0+2=2 	// according to apply(Integer i, Integer j) function
+||		then, 2+4=6
+||		then, 6+6=12
+||		then, 12+8=20
+||		then, 20+10=30
+||		then, 30+12=42 // final O/P
+||*/
+||		System.out.println(result);;
+||	}
+||}
+||/*
+||O/P:
+||42
+||*/
+||
+||/*
+||for this program compilation you'll get this NOTES:
+||C:\Users\Akki Pro\Desktop\java\stream> javac StreamMapExplain.java
+||Note: StreamMapExplain.java uses unchecked or unsafe operations.
+||Note: Recompile with -Xlint:unchecked for details.
+||*/
+||
+||/*
+||if you'll follow Notes you'll get following 2 Warnings :
+||C:\Users\Akki Pro\Desktop\java\stream>javac -Xlint:unchecked StreamMapExplain.java
+||StreamMapExplain.java:112: warning: [unchecked] unchecked call to <R>map(Function<? super T,? extends R>) as a member of the raw type Stream
+||                Stream s1 = s.map(f);
+||                                 ^
+||  where R,T are type-variables:
+||    R extends Object declared in method <R>map(Function<? super T,? extends R>)
+||    T extends Object declared in interface Stream
+||StreamMapExplain.java:114: warning: [unchecked] unchecked call to reduce(T,BinaryOperator<T>) as a member of the raw type Stream
+||                Integer result = (Integer)s1.reduce(0, b);
+||                                                   ^
+||  where T is a type-variable:
+||    T extends Object declared in interface Stream
+||2 warnings
+||*/
+===============================================================================================================================================
+
+
+
+// let's enhance the code OR let's make this code more efficient
+===============================================================================================================================================
+||// STEP 1:
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||import java.util.function.Function;
+||import java.util.function.BinaryOperator;	
+||
+||class StreamMapEnhanced{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		// we are using f only once. so, let's remove it and put the implemetation where f is being used
+||
+||		// we also have used b only once. so now you are smarter. do the same as above...
+||
+||		Stream s = values.stream();		
+||		Stream s1 = s.map(new Function<Integer, Integer>(){		// implemetation of f has put here
+||			public Integer apply(Integer i){
+||				return i*2;
+||			}
+||		});		
+||								
+||		Integer result = (Integer)s1.reduce(0, new BinaryOperator<Integer>(){		// implemetation of b has put here
+||			public Integer apply(Integer i, Integer j){		
+||				return i+j;
+||			}
+||		});	
+||
+||		System.out.println(result);;
+||	}
+||}
+||*/
+||
+||
+||// STEP 2: we are using @FunctionalInterface by java 1.8 so we can use lambda expression as well
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||
+||class StreamMapEnhanced{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		Stream<Integer> s = values.stream();	// <Integer> added
+||		Stream<Integer> s1 = s.map(i -> i*2);		// lambda expression applied & <Integer> added
+||								
+||		Integer result = (Integer)s1.reduce(0, (c, e) -> c+e);	
+||		// lambda expression applied 
+||		 // and
+||		  // changed name from i, j to c, e
+||		   // where, c stands for carry and e stands for value.
+||
+||		System.out.println(result);;
+||	}
+||}
+||*/
+||
+||
+||
+||// STEP 3: now let's use map() finally...
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;	
+||
+||class StreamMapEnhanced{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		Stream<Integer> s = values.stream();	
+||		// let's remove s1		
+||								
+||		Integer result = s.map(i -> i*2).reduce(0, (c, e) -> c+e);	// let's introduce map() here & use lambda expression
+||
+||		System.out.println(result);;
+||	}
+||}
+||*/
+||
+||
+||// STEP 4: why we converting List to Stream separately ? 
+||// & even Integer result also don't required
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;	
+||
+||class StreamMapEnhanced{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);
+||
+||		// let's remove s			
+||								
+||		System.out.println(values.stream().map(i -> i*2).reduce(0, (c, e) -> c+e));	// write conversion List to Stream here
+||		// write the whole statement in S.o.p();
+||	}
+||}
+||*/
+|| // now you'll understand how that code worked
+||
+||
+||// STEP 5: Coding Standard
+||/*
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;	
+||
+||class StreamMapEnhanced{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);		
+||								
+||		System.out.println(values.stream().map(i -> i*2).reduce(0, (c, e) -> Integer.sum(c,e)));
+||		// instead of manually adding(c+e) we can take help of sum() method	
+||	}
+||}
+||*/
+||
+||
+||
+||
+||// STEP 6: how we forgot METHOD REFERENCE
+||
+||import java.util.List;
+||import java.util.stream.Stream;
+||import java.util.Arrays;
+||
+||class StreamMapEnhanced{
+||	public static void main(String[] args) {
+||		List<Integer> values = Arrays.asList(1, 2, 3, 4, 5, 6);		
+||								
+||		System.out.println(values.stream().map(i -> i*2).reduce(0, Integer::sum));	// METHOD REFERENCE
+||	}
+||}
+||
+||/*
+||O/P:
+||42
+||*/
+===============================================================================================================================================
+
+
+
+
+
+
+# Problem:
+	- List(12, 20, 35, 46, 55, 68, 75)
+	  give me sum of numbers which are DivisibleBy5.
+
+# Solution
+
+// #Normal_Life
+
+import java.util.Arrays;
+import java.util.List;
+
+class DivisibleBy5{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		int result = 0;
+		for (int i : values) {
+			if(i%5 == 0){	
+				// System.out.println(i);	// 20, 35, 55, 75
+				result += i;	// 20+35+55+75
+			}
+		}
+		System.out.println(result);		// 185
+	}
+}
+
+
+// #Thug_Life
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+class DivisibleBy5{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		System.out.println(values.stream()
+						.filter(i -> i%5==0)
+						.reduce(0, Integer::sum));	// O/P: 185
+		// using filter() life becomes more easy
+	}
+}
+
+
+
+
+
+
+// how this filter worked let's understand in FilterExplain.java see below...
+
+// Predicate is a @FunctionalInterface. So, it supports lambda expressions
+// Predicate accepts only one argument T => Predicate<T>
+// Predicate returns one Boolean valued function.
+// Predicate has one abstract method which is following:
+/*
+@FunctionalInterface
+public interface Predicate<T>{
+	boolean test(T t);
+}
+*/
+/*
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+import java.util.function.Predicate;	// this import required
+
+class FilterExplain{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		// System.out.println(values.stream().filter(i -> i%5 == 0).reduce(0, Integer::sum));
+		// let's understand this filter logic, how it works?
+
+		Predicate<Integer> p = new Predicate<Integer>(){
+			public boolean test(Integer i){
+				return i%5 ==0;		// returns boolean value
+			}
+		};
+		System.out.println(values.stream().filter(p).reduce(0, Integer::sum));	// filter using some Predicate logic here so let's implement Predicate p
+	}
+}
+*/
+
+
+
+// now let's enhance it...
+// STEP 1:
+/*
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+import java.util.function.Predicate;
+
+class FilterExplain{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		// p is used only once. so, we don't required separate object
+		System.out.println(values.stream()
+						.filter(new Predicate<Integer>(){
+								public boolean test(Integer i){
+									return i%5 ==0;	
+								}
+							})		//instead of p we put implemetation of p here
+						.reduce(0, Integer::sum));	
+	}
+}
+*/
+
+
+// STEP 2: more efficient, more enhance...
+/*
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+// import java.util.function.Predicate;  // now not required
+
+class FilterExplain{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		System.out.println(values.stream()
+						.filter(i -> i%5 ==0)	// only one abstract method. so, don't required to override(define/declare again)
+							// no return requied in lambda 
+						.reduce(0, Integer::sum));	
+	}
+}
+*/
+
+
+
+// STEP 3: what if someone say give me sum of DOUBLE of DivisibleBy5
+// simply we can use map() over here...
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+class FilterExplain{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		System.out.println(values.stream()
+						.filter(i -> i%5 ==0)
+						.map(i -> i*2)		// 40, 70, 110, 150	
+						.reduce(0, Integer::sum));	// 40+70+110+175 = 370
+	}
+}
+
+
+# Don't you think this sounds like MAP REDUCE of GOOGLE?
+	=> yeah, this is how GOOGLE works... they first map all the elements and then they try to reduce the elements so that the searching will be easy.
+
+
+
+
+
+
+
+=================================================================================================================================================
+
+# WHAT IF I WANT TO FIND THE FIRST ELEMENT OF STREAM ?
+// We have findFirst() method
+
+// findFirst() will give us the first value of stream
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+class FindFirst{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		System.out.println(values.stream()
+						.filter(i -> i%5 == 0)
+						.map(i -> i*2)
+						.findFirst());		
+	}
+}
+/*
+O/P:
+Optional[40]
+*/
+
+// why Optional?
+// bcz when there's no matching any stream value then it'll show you Optional.emplty instead of throwing Exception/Error
+
+
+// example: FindFirstOptional.java
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+class FindFirstOptional{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(6, 88,  99);
+
+		System.out.println(values.stream()
+						.filter(i -> i%5 == 0)
+						.map(i -> i*2)
+						.findFirst());		
+	}
+}
+/*
+O/P:
+Optional.empty
+*/
+
+
+
+
+// now we can't provide Optional.empty as output to user.
+// so, we have orElse() method
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+class FindFirstOptional{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(6, 88,  99);
+
+		System.out.println(values.stream()
+						.filter(i -> i%5 == 0)
+						.map(i -> i*2)
+						.findFirst()
+						.orElse(0));		
+	}
+}
+/*
+O/P:
+0
+*/
+
+
+
+
+// Whatever we did, is it really efficient?
+// let's compare with #Normal_Life 
+	/*
+	List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+	
+	// for just finding first element after filter in #Normal_Life
+	int result = 0;
+	for (int i : values) {
+		if(i%5 == 0){
+			result = i*2;
+			break;
+		}				
+	}
+	System.out.println(result);
+	*/	
+
+// As we can see, for finding first element, First we think that #Normal method is more efficient
+// bcz it just normally checks for number divisible by 5.
+// if yes, then simply break the loop and print
+
+// while in #Thug_Life,
+// we takes whole stream
+// then we apply filter(which will get ALL ELEMENTS which are divisible by 5)
+// then mapping (ALL Numbers which are divisible by 5 will multiply with 2)
+// then we get first element
+
+// So, here we think #Normal_Life wins
+// But, NO, StreamAPI is smart
+
+
+
+
+// to understand this you have to see next program: FindFirst_is_efficient_proof.java...
+
+/*
+// totally efficient #Normal_Life
+
+import java.util.Arrays;
+import java.util.List;
+class FindFirst_is_efficient_proof{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		// for just finding first element after filter in #Normal_Life
+		int result = 0;
+		for (int i : values) {
+			if(i%5 == 0){			// 12 rejected, 20 will pass
+				result = i*2;		// 20*2 = 40 will pass
+				break;			// breaks loop
+			}				
+		}	
+		System.out.println(result);		//40
+	}
+}
+*/
+
+// let's prove stream is also efficient...
+
+// #Thug_Life
+/*
+
+*/
+// filter() and map() are lazy methods / lazy evaluation methods
+// where findFirst() is eagar / terminal method
+
+// what's lazy evaluation vs terminal method?
+// => LAZY EVALUATION method will complete it's whole task then further method can work
+// 		for ex. here filter() will complete it's whole task then map() will do and so on...
+// 			for general ex. assignments are given to complete in a week but in between faculty ask for an assignment everyone will say yes it's done but actually it's not done & when if faculty just ask for pic of completion we will take hours of time to provide pic. this is how lazy evaluation works.
+
+// but if apply any terminal approach like findFirst() then it'll just ask above method(.map() here) to provide only first element.
+// and above method will ask its above method(.filter() here) to provide just first element. & so on...
+// so in reality they only brings only first element(40 here).
+
+// but is it really happens like this?
+
+// let me prove it...
+
+// #PROOF
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+class FindFirst_is_efficient_proof{
+	public static void main(String[] args) {
+		List<Integer> values = Arrays.asList(12, 20, 35, 46, 55, 68, 75);
+
+		System.out.println(values.stream()
+						.filter(FindFirst_is_efficient_proof::isDivisible)
+						.map(FindFirst_is_efficient_proof::mapDouble)
+						.findFirst()
+						.orElse(0));		
+	}
+	public static boolean isDivisible(int i){
+		System.out.println("is Divisible " + i);
+		return i%5 == 0;
+	}
+	public static int mapDouble(int i){
+		System.out.println("in mapDouble " + i);
+		return i*2;
+	}
+}
+/*
+O/P:
+is Divisible 12		// 12 rejected
+is Divisible 20		// 20 approved and passed to map() from filter()
+in mapDouble 20		// 20*2 passed to findFirst() from map()
+40					// 40 passed as o/p by findFirst() 
+*/
+
+// Prooved with Respect++
