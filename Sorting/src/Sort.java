@@ -20,7 +20,7 @@ class Sort {
         System.out.println("4. Recursive Bubble Sort");
         System.out.println("5. Recursive Insertion Sort");
         System.out.println("6. Selection Sort");
-
+        System.out.println("7. Recursive Selection Sort");
         String selectedAlgo = usrIp.nextLine();
         switch(selectedAlgo) {
             case "1":
@@ -50,6 +50,12 @@ class Sort {
             case "6":
                 Selection selection = new Selection();
                 selection.selectionSort(arr, len);
+                break;
+            case "7":
+                Selection recursiveSelection = new Selection();
+                recursiveSelection.recursiveSelectionSort(arr, len, len);
+                System.out.println("Welcome to Recursive Selection Sort...");
+                System.out.println(Arrays.toString(arr));
                 break;
             default:
                 System.out.println("enter valid choice...");
