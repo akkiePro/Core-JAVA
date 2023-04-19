@@ -19,9 +19,8 @@ public class Bubble {
     3 4 2 1 5 22
     3 2 4 1 5 22
     3 2 1 4 5 22*/
-    public void bubbleSort(int[] arr){
+    public void bubbleSort(int[] arr, int len){
         System.out.println("Welcome to Bubble Sort...");
-        int len = arr.length;
         for (int i=len-1; i>0; i--) {
             for (int j=0; j<i; j++) {
                 if (arr[j] > arr[j+1]) {
@@ -48,9 +47,8 @@ public class Bubble {
     j=3 1 2 3 4 5 6
     j=4 1 2 3 4 5 6
     */
-    public void optimisedBubbleSort(int[] arr) {
+    public void optimisedBubbleSort(int[] arr, int len) {
         System.out.println("Welcome to Optimised Bubble Sort...");
-        int len = arr.length;
         boolean swapped;
         for (int i=len-1; i>0; i--) {
             swapped = false;
