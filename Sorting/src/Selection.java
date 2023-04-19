@@ -24,4 +24,18 @@ public class Selection {
         System.out.println("Selection Sort is completed...");
         Sort.printArray(arr);
     }
+    public void recursiveSelectionSort(int[] arr, int len, int len2) {
+        if(len == 1)
+            return;
+        recursiveSelectionSort(arr, len-1, len2);
+        int smallestIndex = len-2;
+        for (int i=len-2; i<len2-1; i++) {
+            if (arr[smallestIndex] > arr[i+1]) {
+                smallestIndex = i+1;
+            }
+        }
+        int temp = arr[smallestIndex];
+        arr[smallestIndex] = arr[len-2];
+        arr[len-2] = temp;
+    }
 }
