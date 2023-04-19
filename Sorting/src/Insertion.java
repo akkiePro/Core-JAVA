@@ -18,9 +18,8 @@ public class Insertion {
      * j=1   key=2   3 * 4 5 22 1
      * j=0   key=2   2 3 4 5 22 1
      * */
-    public void insertionSort(int[] arr) {
+    public void insertionSort(int[] arr, int len) {
         System.out.println("Welcome to Insertion Sort...");
-        int len = arr.length;
         for(int i=1; i<len; i++) {
             int j = i-1;
             int key = arr[i];
