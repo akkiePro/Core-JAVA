@@ -14,7 +14,10 @@ public class BinaryAddition {
         StringBuilder addedDigits = new StringBuilder();
         for (int i=0; i<=s1.length(); i++) { //doesn't matter if you break loop at s2.length() bcz both are same
             if(i == s1.length())
-                addedDigits.append(carry);
+                if(carry == 1)
+                    addedDigits.append(carry);
+                else
+                    break;
             else {
                 int digitOfS1 = Integer.parseInt(String.valueOf(s1.charAt(i)));
                 int digitOfS2 = Integer.parseInt(String.valueOf(s2.charAt(i)));
