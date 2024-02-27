@@ -13,6 +13,8 @@ class StringDemo {
         System.out.println(member);
 
         System.out.println(name == member);     // there's only one "Akash" which is referenced by member and name.
+        System.out.println(name.hashCode());    // 63313388
+        System.out.println(member.hashCode());  // 63313388
 
         String name2 = "akash";
         name2 = name2 + " prajapati";
